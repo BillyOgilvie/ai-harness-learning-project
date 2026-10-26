@@ -1,0 +1,50 @@
+{
+  "id": "chatcmpl-457",
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "refusal": null,
+        "role": "assistant",
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "call_laqqucyj",
+            "function": {
+              "arguments": "{}",
+              "name": "search_tools"
+            },
+            "type": "function",
+            "index": 0
+          }
+        ],
+        "reasoning": "The user wants to know what tools I have access to. I can call search_tools with no search term to get the full list."
+      }
+    }
+  ],
+  "created": 1792923438,
+  "model": "q38",
+  "object": "chat.completion",
+  "metadata": null,
+  "moderation": null,
+  "service_tier": null,
+  "system_fingerprint": "fp_ollama",
+  "usage": {
+    "completion_tokens": 44,
+    "prompt_tokens": 441,
+    "total_tokens": 485,
+    "completion_tokens_details": null,
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cache_write_tokens": null,
+      "cached_tokens": 0,
+      "image_tokens": null,
+      "text_tokens": null
+    }
+  }
+}
