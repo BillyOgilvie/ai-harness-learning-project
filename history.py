@@ -25,14 +25,15 @@ from pathlib import Path
 
 import config
 
-CAP = 10_000 # chars of a fresh tool result the agent sees inline
-STUB = 300 # chars kept once the turn that produced it is over
+CAP = 10_000  # chars of a fresh tool result the agent sees inline
+STUB = 300  # chars kept once the turn that produced it is over
 
-TRIMMED = "[output trimmed:" # marker, so stripping twice is a no-op
-SUMMARY = "<summary>" # marks handoff note compaction leaves behind TODO
-SPILLS = [] # temp files belonging to the current turn
+TRIMMED = "[output trimmed:"  # marker, so stripping twice is a no-op
+SUMMARY = "<summary>"  # marks handoff note compaction leaves behind TODO
+SPILLS = []  # temp files belonging to the current turn
 
 # 1. CAP ----------------------------------------------------
+
 
 def spill(text):
     """Park the full output on disk fro the rest of this turn"""
@@ -44,6 +45,7 @@ def spill(text):
     SPILLS.append(Path(handle.name))
     return handle.name
 
+
 def cap(text):
     """Trim a fresh tool call result, leaving a pointer to the whole thing"""
     if len(text) <= CAP:
@@ -54,18 +56,23 @@ def cap(text):
     except OSError:
         # No temp file (read-only /tmp, no space). Still better to trim and
         # say so than to fail the tool call outright.
-        return text[:CAP] + f"\n\n{TRIMMED} {len(text) - CAP} chars cut and the test could not be saved.]"
+        return (
+            text[:CAP]
+            + f"\n\n{TRIMMED} {len(text) - CAP} chars cut and the test could not be saved.]"
+        )
     return (
         text[:CAP] + f"\n\n{TRIMMED} {len(text) - CAP} of {len(text)} chars cut. "
         f"The whole output is at {path} - page through it with"
         "head, tail, sed -n or grep. It is deleted when this turn ends.]"
     )
 
+
 def sweep():
     """Delete this turns' temp files. Their paths die with the tool results"""
     for path in SPILLS:
         path.unlink(missing_ok=True)
     SPILLS.clear()
+
 
 def locked(messages):
     """Length of the frozen prefix - everything up to and including the newest
@@ -76,16 +83,18 @@ def locked(messages):
             return index + 1
         return 0
 
+
 # 2. STRIP --------------------------------------------------
+
 
 def strip(messages):
     """Shirk every tool result that is no longer part of the live turn.
-    
+
     Called once a turn has finished, so by now "everything unlocked" and
     'everything the model no longer needs in full' are the same set.
     """
     shrunk = 0
-    for message in messages[locked(messages):]:
+    for message in messages[locked(messages) :]:
         content = messages.get("content") or ""
         if message["role"] != "tool" or TRIMMED in content or len(content) <= STUB:
             continue
@@ -97,20 +106,23 @@ def strip(messages):
         shrunk += 1
     return shrunk
 
+
 # 3. DROP ---------------------------------------------------
+
 
 def estimate(messages):
     """Rough token count. Good enough to decide whether to panic"""
     return sum(len(json.dumps(m)) for m in messages) // 4
 
+
 def fit(messages):
     """Last resort: discard whole tool results, oldest first, until it fits
-    
+
     Returns how many went. Normally zero - cap and strip do the real work
     """
     budget = config.CONTEXT_WINDOW * config.COMPACT_AT
     dropped = 0
-    for message in messages[locked(messages):]:
+    for message in messages[locked(messages) :]:
         if estimate(messages) <= budget:
             break
         if messages["role"] == "tool" and TRIMMED not in (message.get("content") or ""):

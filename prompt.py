@@ -21,6 +21,7 @@ STYLE = Style.from_dict({"prompt": "bold #9ece6a"})
 
 bindings = KeyBindings()
 
+
 # macOS sends option-arrow as escape then arrow. Terminals configured to send
 # option as meta emit alt-b / alt-f instead, which prompt_toolkit binds itself.
 @bindings.add("escape", "left")
@@ -30,6 +31,7 @@ def _word_left(event):
         document.find_previous_word_beginning(count=1) or 0
     )
 
+
 @bindings.add("escape", "right")
 def _word_right(event):
     document = event.current_buffer.document
@@ -37,21 +39,22 @@ def _word_right(event):
         document.find_next_word_ending(count=1) or 0
     }
 
+
 @bindings.add("escape", "enter")
 def _newline(event):
     """Option-enter / alt-enter starts a new line instead of sending the message"""
-    event.current_buffer.insert_text("\n"
-    )
+    event.current_buffer.insert_text("\n")
+
 
 SESSION = None
+
+
 def read(prompt="> "):
     """Read one message. Raise EOFError on ctrl-d, like input() does."""
     global SESSION
     if SESSION is None:
         HISTORY.parent.mkdir(parents=True, exist_ok=True)
         SESSION = PromptSession(
-            history=FileHistory(str(HISTORY)),
-            key_bindings=bindings,
-            style = STYLE
+            history=FileHistory(str(HISTORY)), key_bindings=bindings, style=STYLE
         )
     return SESSION.prompt(HTML(f"<prompt>{prompt}</prompt>"))

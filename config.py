@@ -18,5 +18,5 @@ MODEL = os.environ["MODEL"]
 
 # how much room the model has and how to spend it
 CONTEXT_WINDOW = int(os.environ.get("CONTEXT_WINDOW", 32_000))
-COMPACT_AT = 0.85 # compact once the prompt crosses this much of the window
-COMPACT_TO = 0.35 # and cut back to this much
+COMPACT_AT = 0.85  # compact once the prompt crosses this much of the window
+COMPACT_TO = 0.35  # and cut back to this much

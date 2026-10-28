@@ -9,13 +9,13 @@ user_input = input("Enter your agent prompt> ")
 
 messages = [
     {"role": "system", "content": SYSTEM_PROMPT},
-    {"role": "user", "content": user_input}
+    {"role": "user", "content": user_input},
 ]
 
 for step in range(MAX_STEPS):
     message, usage = call_llm(messages)
     messages.append(message.model_dump(exclude_none=True))
-                    
+
     if message.content:
         print("\nAgent: ", message.content, "\n")
 
@@ -30,8 +30,6 @@ for step in range(MAX_STEPS):
         print(f"Tool: {tool_call.function.name}({args})")
         print(result, "\n")
 
-        messages.append({
-            "role": "tool",
-            "tool_call_id": tool_call.id,
-            "content": result
-        })
+        messages.append(
+            {"role": "tool", "tool_call_id": tool_call.id, "content": result}
+        )

@@ -22,12 +22,13 @@ Your current working directory is {os.getcwd()}
 The current date is (%d/%m/%Y): {time.strftime("%d/%m/%Y", time.localtime())}
 """
 
+
 def call_llm(messages):
     with Console().status("Thinking..."):
         response = client.chat.completions.create(
-        model="q38",
-        messages=messages,
-        tools=TOOL_SCHEMAS,
+            model="q38",
+            messages=messages,
+            tools=TOOL_SCHEMAS,
         )
 
     message = response.choices[0].message
@@ -39,10 +40,11 @@ def call_llm(messages):
         "prompt_tokens": response.usage.prompt_tokens,
         "completion_tokens": response.usage.completion_tokens,
         "reasoning_tokens": getattr(completion_details, "reasoning_tokens", None),
-        "cached_tokens": getattr(prompt_details, "cached_tokens", None)
+        "cached_tokens": getattr(prompt_details, "cached_tokens", None),
     }
 
     return message, usage
+
 
 # with Console().status("Thinking..."):
 #     response = client.chat.completions.create(
@@ -61,7 +63,6 @@ def call_llm(messages):
 # prompt_details = response.usage.prompt_tokens_details
 
 
-
 # print("\nAgent: ", output, "\n")
 
 # if message.tool_calls:
@@ -70,7 +71,7 @@ def call_llm(messages):
 #         fn_name = tool_call.function.name
 #         args = json.loads(tool_call.function.arguments)
 #         result = TOOLS[fn_name](**args)
-        
+
 #         print("Reasoning: ", getattr(message, "reasoning", None))
 #         print(f"Tool: {fn_name}({args})")
 #         print(result, "\n")

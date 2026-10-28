@@ -4,21 +4,23 @@ from openai import OpenAI
 
 client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
 
-tools = [{
-    "type": "function",
-    "function": {
-        "name": "add",
-        "description": "Add two integers",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "a": {"type": "integer"},
-                "b": {"type": "integer"},
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "add",
+            "description": "Add two integers",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "a": {"type": "integer"},
+                    "b": {"type": "integer"},
+                },
+                "required": ["a", "b"],
             },
-            "required": ["a", "b"],
         },
-    },
-}]
+    }
+]
 
 t = time.time()
 
