@@ -4,6 +4,7 @@ import time
 
 from rich.console import Console
 from openai import OpenAI
+from skills import skills_prompt
 
 client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
 
@@ -19,6 +20,12 @@ agent-browser get text @eN, agent-browser close.
 Run snapshot after each navigation.
 
 Your current working directory is {os.getcwd()}
+
+You have skills available. Each one is a set of instructions for a task.
+If a skill matches what the user wants, call read_skill first and follow it/
+
+{skills_prompt()}
+
 The current date is (%d/%m/%Y): {time.strftime("%d/%m/%Y", time.localtime())}
 """
 
