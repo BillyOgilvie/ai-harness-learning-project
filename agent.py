@@ -1,5 +1,21 @@
 import json
 
+"""
+import argparse
+
+need to add each of these below that are missing
+from . import commands
+from . import compact
+from . import history
+from . import session
+from .context import reminder
+from .llm import SYSTEM_PROMPT, call_llm
+from . import sandbox
+from .todos import active_form
+from .tools import execute
+from .ui import ui
+"""
+
 from llm import SYSTEM_PROMPT, call_llm
 from tools import TOOLS
 
